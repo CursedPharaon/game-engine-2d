@@ -59,17 +59,18 @@
 ### Вариант A — автоматически (рекомендуется)
 1. Форкни репозиторий.
 2. Включи Pages: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. Запушь в `main` — workflow `.github/workflows/pages.yml` соберёт `vite build` и задеплоит `dist/` (вместе с `games/`).
+3. Запушь в `main` — workflow `.github/workflows/pages.yml` задеплоит статику (без сборки, чистый HTML) — просто `index.html` + `games/`.
 4. Открой `https://<логин>.github.io/<репозиторий>/`.
 
-### Вариант B — вручную
+### Вариант B — вручную / локально
+Просто открой `index.html` в браузере (двойной клик) или запусти любой статический сервер:
 ```bash
-npm install
-npm run build        # → dist/
-# скопируй games/ внутрь dist/ если нужно:
-cp -r games dist/games
-cp dist/index.html dist/404.html  # для SPA-роутинга
+# Python
+python -m http.server 8000
+# или Node
+npx serve .
 ```
+Никаких `npm install` / `vite` не нужно — движок полностью на HTML/CSS/JS в одном файле.
 
 ### Публикация игры
 1. В редакторе нажми **Опубликовать** → введи `owner` / `repo` / `token` (scope `repo`) → **Опубликовать через API**.
@@ -78,28 +79,18 @@ cp dist/index.html dist/404.html  # для SPA-роутинга
 Токен: **GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)** → `Generate new token` с `repo` доступом.
 
 ### Локальная разработка
-```bash
-npm install
-npm run dev    # http://localhost:5173
-```
+Открой `index.html` напрямую — весь код уже внутри, сборка не требуется.
 
 ## 📁 Структура
 
 ```
 /
-├── index.html              # Vite entry
-├── src/
-│   ├── main.js             # SPA: лента, редактор, профиль, drag-n-drop, блоки
-│   ├── styles.css          # тёмная тема
-│   ├── compiler.js         # generateStandaloneHTML(gameData) → один HTML
-│   └── github.js           # publishToGitHub() + fetchGamesList()
-├── public/games/
-│   ├── games.json          # лента (копируется в dist)
+├── index.html              # ЕДИНСТВЕННЫЙ ФАЙЛ ДВИЖКА — HTML + CSS + JS inline, без сборщиков
+├── games/                  # опубликованные игры (каждая — папка с index.html)
+│   ├── games.json          # лента сообщества
 │   └── demo-game/index.html
-├── games/                  # то же, что public/games, для GitHub API
-│   ├── games.json
-│   └── demo-game/index.html
-└── .github/workflows/pages.yml
+├── public/games/           # копия games для совместимости
+└── .github/workflows/pages.yml # деплой статики на Pages (без npm/vite)
 ```
 
 ### JSON-схема игры
@@ -124,4 +115,4 @@ npm run dev    # http://localhost:5173
 
 ---
 
-Сделано для GitHub Pages. Тёмная тема, Vite, чистый JS, без зависимостей кроме Vite.
+Сделано для GitHub Pages. Тёмная тема, чистый HTML/CSS/JS в одном файле, без зависимостей и сборщиков.
