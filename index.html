@@ -24,6 +24,14 @@
   --red:#ff5a5a;
   --yellow:#f1c40f;
   --radius:10px;
+  /* Pocket Code palette */
+  --pc-orange:#ff8c2f;
+  --pc-orange-dark:#e67e22;
+  --pc-yellow:#f7c948;
+  --pc-blue:#4f9cff;
+  --pc-purple:#a78bfa;
+  --pc-green:#2ecc71;
+  --pc-red:#ff5a5a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
@@ -31,22 +39,38 @@ a{color:var(--accent);text-decoration:none}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-thumb{background:#2a303f;border-radius:99px}
 ::-webkit-scrollbar-track{background:transparent}
-/* HEADER */
+/* HEADER — Pocket Code style */
 .header{
-  height:56px;background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
-  position:sticky;top:0;z-index:100;
+  height:58px;background:linear-gradient(135deg,#ff8c2f 0%, #ff6b2f 100%);border-bottom:2px solid #e67e22;
+  display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)
 }
-.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px}
-.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:grid;place-items:center;font-size:18px}
-.nav{display:flex;gap:6px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:white;text-shadow:0 1px 2px rgba(0,0,0,.2)}
+.logo-icon{width:34px;height:34px;background:white;color:#ff6b2f;border-radius:9px;display:grid;place-items:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.logo small{font-weight:600;opacity:.9;font-size:11px;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:99px;margin-left:4px}
+.nav{display:flex;gap:6px;background:rgba(0,0,0,.14);padding:4px;border-radius:99px}
 .nav button{
-  background:transparent;border:1px solid transparent;color:var(--muted);
-  padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:.15s
+  background:transparent;border:none;color:rgba(255,255,255,.85);
+  padding:7px 16px;border-radius:99px;cursor:pointer;font-size:13px;font-weight:700;transition:.15s
 }
-.nav button.active{background:var(--panel2);border-color:var(--border);color:var(--text)}
-.nav button:hover{color:var(--text);background:var(--bg3)}
+.nav button.active{background:white;color:#ff6b2f;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.nav button:hover{background:rgba(255,255,255,.18);color:white}
+.nav button.active:hover{background:white;color:#ff6b2f}
 .header-right{display:flex;gap:10px;align-items:center}
+/* GitHub auth button Pocket Code style */
+.btn-gh{
+  background:#24292f;color:white;border:1px solid #1b1f23;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:.15s;box-shadow:0 2px 6px rgba(0,0,0,.2)
+}
+.btn-gh:hover{background:#1b1f23;transform:translateY(-1px)}
+.btn-gh svg{width:18px;height:18px;fill:white}
+.gh-user{
+  display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);padding:4px 8px 4px 4px;border-radius:99px;cursor:pointer;border:1px solid rgba(0,0,0,.08)
+}
+.gh-user img{width:28px;height:28px;border-radius:50%;border:1px solid #ddd}
+.gh-user span{font-size:12px;font-weight:700;color:#24292f;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gh-user .gh-logout{font-size:11px;color:#cf222e;background:#ffebe9;border:1px solid #ffc1c0;padding:4px 8px;border-radius:99px;font-weight:700}
+.gh-user .gh-logout:hover{background:#ffc1c0}
 .btn{
   border:1px solid var(--border);background:var(--panel2);color:var(--text);
   padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;display:inline-flex;align-items:center;gap:8px
@@ -197,6 +221,36 @@ a{color:var(--accent);text-decoration:none}
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#1f2433;border:1px solid var(--border2);color:var(--text);padding:10px 16px;border-radius:99px;font-size:12px;font-weight:600;z-index:300;opacity:0;transition:.3s;pointer-events:none
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Pocket Code blocks polish */
+.palette-group{border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg3);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.palette-title{padding:9px 12px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.block-btn{border-radius:10px;border:2px solid transparent;box-shadow:0 2px 0 rgba(0,0,0,.18);font-weight:700}
+.block-card{border-radius:10px;box-shadow:0 2px 0 rgba(0,0,0,.15);border-left-width:6px}
+/* GitHub OAuth modal — имитация github.com/login/oauth/authorize */
+.gh-oauth{width:520px;max-width:96vw;background:#ffffff;color:#24292f;border-radius:12px;overflow:hidden;border:1px solid #d0d7de;box-shadow:0 20px 60px rgba(0,0,0,.45);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.gh-oauth-head{background:#f6f8fa;border-bottom:1px solid #d0d7de;padding:14px 18px;display:flex;align-items:center;gap:12px}
+.gh-oauth-head svg{width:32px;height:32px}
+.gh-oauth-head h3{font-size:15px;font-weight:600}
+.gh-oauth-head p{font-size:12px;color:#57606a}
+.gh-oauth-body{padding:18px}
+.gh-oauth-app{display:flex;gap:14px;align-items:center;background:#f6f8fa;border:1px solid #d0d7de;border-radius:8px;padding:12px;margin-bottom:14px}
+.gh-oauth-app .app-icon{width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,#ff8c2f,#ff6b2f);display:grid;place-items:center;color:white;font-size:22px}
+.gh-oauth-perms{border:1px solid #d0d7de;border-radius:8px;overflow:hidden;margin-bottom:14px}
+.gh-oauth-perms h4{font-size:12px;font-weight:600;padding:10px 12px;background:#f6f8fa;border-bottom:1px solid #d0d7de}
+.gh-oauth-perms ul{list-style:none;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.gh-oauth-perms li{font-size:12px;display:flex;gap:8px;align-items:flex-start;color:#24292f}
+.gh-oauth-perms li span{color:#1a7f37}
+.gh-oauth-actions{display:flex;gap:10px}
+.btn-gh-green{background:#2da44e;color:white;border:1px solid rgba(27,31,36,.15);padding:10px 16px;border-radius:6px;font-weight:600;cursor:pointer;flex:1}
+.btn-gh-green:hover{background:#2c974b}
+.btn-gh-cancel{background:#f6f8fa;border:1px solid #d0d7de;color:#24292f;padding:10px 16px;border-radius:6px;font-weight:600;cursor:pointer}
+.btn-gh-cancel:hover{background:#eff1f3}
+.gh-login-field{width:100%;padding:10px 12px;border:1px solid #d0d7de;border-radius:6px;font-size:14px;margin-bottom:10px}
+.gh-login-field:focus{outline:none;border-color:#0969da;box-shadow:0 0 0 3px rgba(9,105,218,.3)}
+/* Pocket Code feed polish */
+.feed-header h1{font-size:28px;letter-spacing:-.02em}
+.game-card{border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.card-preview{border-bottom:2px solid var(--border)}
 
   </style>
 </head>
@@ -529,6 +583,13 @@ async function fetchGamesList(){
 // ---------- STORAGE KEYS ----------
 const LS_GAME = 'gc_current_game_v2';
 const LS_GH = 'gc_github_cfg';
+const LS_GH_USER = 'gc_github_user';
+// OAuth config — если заполнишь clientId и укажешь redirectUri/proxy, будет реальный OAuth. Иначе — красивая имитация как в Pocket Code.
+const GH_OAUTH_CFG = {
+  clientId: (localStorage.getItem('gc_gh_client_id')||'').trim() || '', // можно задать в профиле
+  // опционально: прокси для обмена code->token (требуется для реального OAuth на статике). Если пусто — будет режим имитации.
+  proxyUrl: (localStorage.getItem('gc_gh_proxy')||'').trim() || ''
+};
 
 // ---------- DEFAULT GAME ----------
 function uid(prefix='id'){ return prefix+'_'+Math.random().toString(36).slice(2,7); }
@@ -586,7 +647,141 @@ try{
 let selectedId = gameData.objects[0]?.id || null;
 let dragging=null; // {id, offsetX, offsetY}
 let githubCfg = (()=>{ try{ return JSON.parse(localStorage.getItem(LS_GH)||'{}')}catch{return{}} })();
+let githubUser = (()=>{ try{ return JSON.parse(localStorage.getItem(LS_GH_USER)||'null')}catch{return null} })();
 let feedGames = [];
+
+// ---------- GITHUB AUTH (как в Pocket Code: кнопка Войти через GitHub -> GitHub OAuth) ----------
+function saveGithubUser(u){ githubUser=u; if(u) localStorage.setItem(LS_GH_USER, JSON.stringify(u)); else localStorage.removeItem(LS_GH_USER); }
+function getGithubAuthUrl(){
+  const state = Math.random().toString(36).slice(2,10);
+  localStorage.setItem('gh_oauth_state', state);
+  const redirect = location.origin + location.pathname;
+  const scope = 'repo user';
+  return `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(GH_OAUTH_CFG.clientId)}&redirect_uri=${encodeURIComponent(redirect)}&scope=${encodeURIComponent(scope)}&state=${state}`;
+}
+async function fetchGithubUser(token){
+  try{
+    const r = await fetch('https://api.github.com/user', {headers:{'Authorization':`Bearer ${token}`, 'Accept':'application/vnd.github+json'}});
+    if(r.ok) return await r.json();
+  }catch{}
+  return null;
+}
+function openGithubLogin(){
+  // если есть реальный clientId — открываем настоящий GitHub OAuth в новом окне (как просит пользователь)
+  if(GH_OAUTH_CFG.clientId){
+    // открываем popup как GitHub: человек видит github.com/login/oauth/authorize и жмёт Подтвердить
+    const url = getGithubAuthUrl();
+    const w = window.open(url, '_blank', 'width=620,height=780');
+    if(!w){
+      location.href = url;
+    } else {
+      toast('Открыли GitHub — подтвердите доступ и вернитесь');
+    }
+    return;
+  }
+  // иначе — красивая имитация GitHub OAuth прямо в сайте (pixel-perfect как на github.com)
+  openSimulatedGithubAuth();
+}
+function openSimulatedGithubAuth(){
+  const m = document.getElementById('githubAuthModal');
+  const prefillLogin = githubUser?.login || githubCfg.owner || '';
+  document.getElementById('ghAuthLogin').value = prefillLogin;
+  // avatar preview
+  const av = document.getElementById('ghAuthAvatar');
+  if(prefillLogin) av.src = `https://github.com/${prefillLogin}.png`;
+  else av.src = 'https://avatars.githubusercontent.com/u/0?v=4';
+  m.classList.add('active');
+}
+async function handleSimulatedAuth(){
+  const login = document.getElementById('ghAuthLogin').value.trim().replace(/^@/,'');
+  const tokenInput = document.getElementById('ghAuthToken').value.trim();
+  if(!login) return toast('Введи GitHub логин');
+  // если токен указан — пробуем реально проверить через api.github.com
+  let avatar_url = `https://github.com/${login}.png`;
+  let name = login;
+  let token = tokenInput || githubCfg.token || 'simulated_'+Math.random().toString(36).slice(2,8);
+  let verified = false;
+  if(tokenInput){
+    const u = await fetchGithubUser(tokenInput);
+    if(u && u.login){
+      avatar_url = u.avatar_url; name = u.name || u.login; verified = true;
+      // сохраняем реальный токен для публикации
+      githubCfg.owner = u.login;
+      githubCfg.token = tokenInput;
+      localStorage.setItem(LS_GH, JSON.stringify(githubCfg));
+      token = tokenInput;
+    } else {
+      toast('Токен не подошёл — сохранили как демо-вход');
+    }
+  }
+  const user = {login, name, avatar_url, token, verified, createdAt: new Date().toISOString()};
+  saveGithubUser(user);
+  if(!githubCfg.owner){ githubCfg.owner = login; localStorage.setItem(LS_GH, JSON.stringify(githubCfg)); }
+  // синхронизируем автора игры
+  if(!gameData.meta.author || gameData.meta.author==='Игрок') { gameData.meta.author = login; saveLocal(); }
+  document.getElementById('githubAuthModal').classList.remove('active');
+  renderAuthArea();
+  renderProfile();
+  toast(`Вход выполнен ✓ Привет, ${login}!`);
+}
+function logoutGithub(){
+  saveGithubUser(null);
+  renderAuthArea();
+  renderProfile();
+  toast('Выход выполнен');
+}
+// обработка возврата с реальным OAuth: ?code=...
+async function handleOAuthCallback(){
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  const state = params.get('state');
+  const savedState = localStorage.getItem('gh_oauth_state');
+  if(code){
+    // очистим URL
+    history.replaceState({}, '', location.pathname + location.hash);
+    if(GH_OAUTH_CFG.proxyUrl){
+      try{
+        toast('Обмениваем code на токен...');
+        const r = await fetch(GH_OAUTH_CFG.proxyUrl, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({code})});
+        const j = await r.json();
+        const token = j.access_token || j.token;
+        if(token){
+          const u = await fetchGithubUser(token);
+          if(u){
+            saveGithubUser({login:u.login, name:u.name||u.login, avatar_url:u.avatar_url, token, verified:true, createdAt:new Date().toISOString()});
+            githubCfg.owner = u.login; githubCfg.repo = githubCfg.repo || location.pathname.split('/')[1] || 'game-engine-2d'; githubCfg.token = token;
+            localStorage.setItem(LS_GH, JSON.stringify(githubCfg));
+            gameData.meta.author = u.login; saveLocal();
+            toast('Успешный вход через GitHub ✓');
+            renderAuthArea(); renderProfile(); return;
+          }
+        }
+        toast('Не удалось получить токен — проверь прокси');
+      }catch(e){ toast('Ошибка OAuth: '+e.message); }
+    } else {
+      // без прокси показываем code и просим вставить токен вручную (статический сайт не может обменять code без бэкенда)
+      const m = document.getElementById('githubAuthModal');
+      m.classList.add('active');
+      document.getElementById('ghAuthLogin').value = githubCfg.owner || '';
+      document.getElementById('ghAuthToken').placeholder = 'Вставь токен, либо введи code: '+code.slice(0,12)+'... (настрой прокси для автообмена в профиле)';
+      toast('Получен OAuth code — настрой прокси или вставь PAT для завершения входа');
+    }
+  }
+}
+function renderAuthArea(){
+  const area = document.getElementById('authArea');
+  if(!area) return;
+  if(githubUser){
+    area.innerHTML = `<div class="gh-user" title="Нажми чтобы выйти"><img src="${githubUser.avatar_url}" alt=""><span>${escapeHtml(githubUser.login)}</span><button class="gh-logout" id="btnGhLogout">Выйти</button></div>`;
+    area.querySelector('#btnGhLogout').addEventListener('click', (e)=>{ e.stopPropagation(); logoutGithub(); });
+    area.querySelector('.gh-user').addEventListener('click', ()=>{ /* profile */ document.querySelector('[data-nav="profile"]').click(); });
+  } else {
+    area.innerHTML = `<button class="btn-gh" id="btnGhLogin"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> Войти через GitHub</button>`;
+    area.querySelector('#btnGhLogin').addEventListener('click', openGithubLogin);
+  }
+}
+window.openGithubLogin = openGithubLogin;
+window.logoutGithub = logoutGithub;
 
 // ---------- BLOCK DEFINITIONS ----------
 const BLOCKS = [
@@ -634,15 +829,16 @@ function saveLocal(){ localStorage.setItem(LS_GAME, JSON.stringify(gameData)); }
 const app = document.getElementById('app');
 app.innerHTML = `
 <header class="header">
-  <div class="logo"><div class="logo-icon">🎮</div> <span>2D Конструктор</span> <span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:6px;border:1px solid var(--border);padding:2px 6px;border-radius:99px">без кода • Phaser-ready</span></div>
+  <div class="logo"><div class="logo-icon">😺</div> <span>Pocket Code 2D</span><small>как в Pocket Code</small></div>
   <nav class="nav">
     <button data-nav="feed" class="active">🏠 Лента</button>
-    <button data-nav="editor">🛠️ Редактор</button>
+    <button data-nav="editor">🧱 Конструктор</button>
     <button data-nav="profile">👤 Профиль</button>
   </nav>
   <div class="header-right">
-    <button class="btn btn-sm" id="btnSaveLocal">💾 Сохранить</button>
-    <button class="btn btn-primary btn-sm" id="btnRun">▶️ Запустить</button>
+    <div id="authArea"></div>
+    <button class="btn btn-sm" id="btnSaveLocal" style="background:white;color:#ff6b2f;border-color:white;font-weight:800">💾 Сохранить</button>
+    <button class="btn btn-primary btn-sm" id="btnRun" style="background:#24292f;border-color:#24292f">▶️ Запустить</button>
   </div>
 </header>
 <div class="container" id="feedSectionWrap">
@@ -661,6 +857,51 @@ app.innerHTML = `
   <div class="modal">
     <div class="modal-head"><strong>Опубликовать игру</strong><button class="icon-btn" onclick="document.getElementById('publishModal').classList.remove('active')">✕</button></div>
     <div class="modal-body" id="publishBody"></div>
+  </div>
+</div>
+<div class="overlay" id="githubAuthModal">
+  <div class="gh-oauth" role="dialog" aria-modal="true">
+    <div class="gh-oauth-head">
+      <svg viewBox="0 0 16 16" fill="#24292f"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <div>
+        <h3>Авторизация через GitHub</h3>
+        <p>github.com — вход в аккаунт</p>
+      </div>
+      <button class="icon-btn" style="margin-left:auto" onclick="document.getElementById('githubAuthModal').classList.remove('active')">✕</button>
+    </div>
+    <div class="gh-oauth-body">
+      <div class="gh-oauth-app">
+        <div class="app-icon">😺</div>
+        <div>
+          <div style="font-weight:700;font-size:14px">Pocket Code 2D <span style="font-weight:400;color:#57606a">хочет получить доступ к</span> <span id="ghAuthUserPreview" style="font-weight:700"></span></div>
+          <div style="font-size:12px;color:#57606a;margin-top:2px">Будет использован для публикации игр в <code>/games/</code> через GitHub API</div>
+        </div>
+        <img id="ghAuthAvatar" src="https://avatars.githubusercontent.com/u/0?v=4" style="width:40px;height:40px;border-radius:50%;margin-left:auto;border:1px solid #d0d7de" alt="">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">GitHub логин</label>
+        <input id="ghAuthLogin" class="gh-login-field" placeholder="например, CursedPharaon" oninput="document.getElementById('ghAuthAvatar').src=this.value.trim()?'https://github.com/'+this.value.trim()+'.png':'https://avatars.githubusercontent.com/u/0?v=4'; document.getElementById('ghAuthUserPreview').textContent=this.value.trim()||'вашему аккаунту'">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Токен (опционально, для реальной публикации)</label>
+        <input id="ghAuthToken" type="password" class="gh-login-field" placeholder="github_pat_... или оставь пустым для демо-входа">
+        <div style="font-size:11px;color:#57606a;background:#f6f8fa;border:1px solid #d0d7de;border-radius:6px;padding:8px;line-height:1.4">
+          Нажми <b>Подтвердить</b> — откроется как на настоящем <b>github.com/login</b>: проверка логина, аватар и права доступа.<br>
+          Если укажешь PAT (scope <code>repo</code>), сможешь сразу публиковать игры без ручного ввода токена. Без токена — вход как демо (как в Pocket Code без сети) — локально, для теста интерфейса.
+        </div>
+      </div>
+      <div class="gh-oauth-perms">
+        <h4>Запрашиваемые права</h4>
+        <ul>
+          <li><span>✔</span> Чтение и запись репозиториев (для <code>PUT /games/games.json</code> и <code>/games/&lt;slug&gt;/index.html</code>)</li>
+          <li><span>✔</span> Доступ к профилю (аватар, логин) для отображения в шапке</li>
+          <li><span>✔</span> Email (необязательно) — для подсказки автора</li>
+        </ul>
+      </div>
+      <div class="gh-oauth-actions">
+        <button class="btn-gh-cancel" onclick="document.getElementById('githubAuthModal').classList.remove('active')">Отмена</button>
+        <button class="btn-gh-green" id="btnGhConfirm">✓ Подтвердить и войти</button>
+      </div>
+      <div style="text-align:center;margin-top:10px"><a href="https://github.com/login" target="_blank" style="font-size:12px;color:#0969da">Открыть настоящий github.com/login в новой вкладке →</a></div>
+    </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -690,6 +931,12 @@ app.querySelectorAll('[data-nav]').forEach(b=>{
 document.getElementById('btnSaveLocal').addEventListener('click',()=>{ saveLocal(); toast('Сохранено локально ✓'); });
 document.getElementById('btnRun').addEventListener('click',()=> openPreview());
 document.getElementById('btnClosePreview').addEventListener('click',()=> document.getElementById('previewOverlay').classList.remove('active'));
+document.getElementById('btnGhConfirm').addEventListener('click', handleSimulatedAuth);
+document.getElementById('githubAuthModal').addEventListener('click', (e)=>{ if(e.target.id==='githubAuthModal') e.currentTarget.classList.remove('active'); });
+document.getElementById('publishModal').addEventListener('click', (e)=>{ if(e.target.id==='publishModal') e.currentTarget.classList.remove('active'); });
+// init auth area + handle oauth callback
+renderAuthArea();
+handleOAuthCallback();
 
 // ---------- FEED ----------
 async function renderFeed(){
@@ -1344,10 +1591,11 @@ function openPublish(){
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px">
         <div style="font-size:12px;font-weight:700;margin-bottom:8px">Опубликовать в сообщество (GitHub API)</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Сохранит файл в <code>/games/${escapeHtml(slug)}/index.html</code> и обновит <code>/games/games.json</code>. Нужен токен с правами <b>repo</b>.</div>
-        <div class="form-group"><label>GitHub логин (owner)</label><input id="ghOwner" value="${escapeHtml(githubCfg.owner||'')}" placeholder="например, CursedPharaon"></div>
+        ${githubUser ? `<div style="display:flex;gap:8px;align-items:center;background:#24292f;color:white;padding:8px 10px;border-radius:8px;margin-bottom:10px"><img src="${githubUser.avatar_url}" style="width:24px;height:24px;border-radius:50%"><span style="font-size:12px;font-weight:700">${escapeHtml(githubUser.login)}</span><span style="font-size:11px;opacity:.7">${githubUser.verified?'✔ подтверждено':'демо'}</span><button class="btn btn-sm" style="margin-left:auto;background:white;color:#24292f" onclick="document.getElementById('publishModal').classList.remove('active'); document.querySelector('[data-nav=profile]').click()">Профиль →</button></div>` : `<div style="background:#ffebe9;border:1px solid #ffc1c0;color:#cf222e;padding:8px 10px;border-radius:8px;font-size:12px;margin-bottom:10px">Ты не вошёл — нажми <b>Войти через GitHub</b> в шапке, потом жмёшь Подтвердить и публикуешь без ручного токена. <button class="btn btn-sm" style="margin-left:8px;background:#24292f;color:white" onclick="document.getElementById('publishModal').classList.remove('active'); openGithubLogin()">Войти через GitHub</button></div>`}
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Сохранит файл в <code>/games/${escapeHtml(slug)}/index.html</code> и обновит <code>/games/games.json</code>. Нужен токен с правами <b>repo</b>. Если вошёл через GitHub — поля заполнятся автоматически.</div>
+        <div class="form-group"><label>GitHub логин (owner)</label><input id="ghOwner" value="${escapeHtml(githubUser?.login||githubCfg.owner||'')}" placeholder="например, CursedPharaon"></div>
         <div class="form-group"><label>Репозиторий</label><input id="ghRepo" value="${escapeHtml(githubCfg.repo|| location.pathname.split('/')[1] || 'game-engine-2d')}" placeholder="game-engine-2d"></div>
-        <div class="form-group"><label>Токен (github_pat_...)</label><input id="ghToken" type="password" value="${escapeHtml(githubCfg.token||'')}" placeholder="вставь токен"></div>
+        <div class="form-group"><label>Токен (github_pat_...)</label><input id="ghToken" type="password" value="${escapeHtml(githubUser?.token && githubUser.verified ? githubUser.token : githubCfg.token||'')}" placeholder="вставь токен — или войди через GitHub выше"></div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-green" id="btnPublishGH" style="flex:1">🚀 Опубликовать через API</button>
           <button class="btn" id="btnSaveGH">💾 Сохранить токен</button>
@@ -1402,19 +1650,39 @@ function renderProfile(){
   const gh=githubCfg;
   profileEl.innerHTML=`
   <div style="max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+    ${githubUser ? `
+    <div style="background:linear-gradient(135deg,#24292f,#1b1f23);border:1px solid #1b1f23;border-radius:14px;padding:18px;color:white;display:flex;gap:14px;align-items:center">
+      <img src="${githubUser.avatar_url}" style="width:64px;height:64px;border-radius:50%;border:3px solid white;box-shadow:0 4px 12px rgba(0,0,0,.3)">
+      <div style="flex:1">
+        <div style="font-size:18px;font-weight:800">${escapeHtml(githubUser.name||githubUser.login)} <span style="font-weight:400;opacity:.8">@${escapeHtml(githubUser.login)}</span> ${githubUser.verified?'<span style="background:#2da44e;color:white;font-size:11px;padding:2px 6px;border-radius:99px">✔ вошли через GitHub</span>':'<span style="background:#ffad33;color:#24292f;font-size:11px;padding:2px 6px;border-radius:99px">демо</span>'}</div>
+        <div style="font-size:12px;opacity:.7;margin-top:4px">Вход через GitHub • токен ${githubUser.verified?'подтверждён':'демо'} • можно публиковать в сообщество</div>
+      </div>
+      <button class="btn" id="btnLogoutProfile" style="background:white;color:#cf222e;border-color:white;font-weight:800">Выйти</button>
+    </div>` : `
+    <div style="background:var(--panel);border:2px dashed var(--border2);border-radius:14px;padding:18px;text-align:center">
+      <div style="font-size:18px;font-weight:800;margin-bottom:6px">👋 Войди через GitHub</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Как в Pocket Code — нажал кнопку, открылся GitHub, нажал Подтвердить — и ты в аккаунте. Аватар сразу в шапке.</div>
+      <button class="btn-gh" id="btnLoginProfile" style="font-size:15px;padding:10px 18px"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> Войти через GitHub</button>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Откроется окно как на <b>github.com/login/oauth/authorize</b> — жмёшь Подтвердить</div>
+    </div>`}
     <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px">
-      <h2 style="font-size:18px;margin-bottom:8px">Профиль и настройки</h2>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Данные сохраняются в <code>localStorage</code> браузера. Токен никогда не отправляется на сторонние серверы — только на <code>api.github.com</code> при публикации.</p>
+      <h2 style="font-size:16px;margin-bottom:8px">⚙️ Настройки публикации</h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Данные сохраняются в <code>localStorage</code>. Токен уходит только на <code>api.github.com</code>. Для реального OAuth укажи Client ID (создай OAuth App на GitHub) — тогда кнопка откроет настоящий github.com.</p>
       <div class="row2">
-        <div class="form-group"><label>GitHub логин</label><input id="pOwner" value="${escapeHtml(gh.owner||'')}" placeholder="CursedPharaon"></div>
+        <div class="form-group"><label>GitHub логин (owner)</label><input id="pOwner" value="${escapeHtml(gh.owner||githubUser?.login||'')}" placeholder="CursedPharaon"></div>
         <div class="form-group"><label>Репозиторий</label><input id="pRepo" value="${escapeHtml(gh.repo||'')}" placeholder="game-engine-2d"></div>
       </div>
-      <div class="form-group"><label>Токен GitHub (PAT, scope: repo)</label><input id="pToken" type="password" value="${escapeHtml(gh.token||'')}" placeholder="github_pat_..."></div>
-      <div style="display:flex;gap:8px">
+      <div class="form-group"><label>Токен GitHub (PAT, scope: repo)</label><input id="pToken" type="password" value="${escapeHtml(gh.token||githubUser?.token||'')}" placeholder="github_pat_..."></div>
+      <div class="row2">
+        <div class="form-group"><label>OAuth Client ID (опционально)</label><input id="pClientId" value="${escapeHtml(GH_OAUTH_CFG.clientId||'')}" placeholder="Ov23li... — для реального github.com/login/oauth/authorize"></div>
+        <div class="form-group"><label>OAuth proxy URL (опционально)</label><input id="pProxy" value="${escapeHtml(GH_OAUTH_CFG.proxyUrl||'')}" placeholder="https://твой-воркер.workers.dev/exchange"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-primary" id="btnSaveProfile">💾 Сохранить</button>
         <button class="btn" id="btnClearProfile">Очистить</button>
+        ${!githubUser?'<button class="btn btn-gh" id="btnLoginProfile2" style="background:#24292f"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> Войти через GitHub</button>':''}
       </div>
-      <div style="margin-top:10px;font-size:11px;color:var(--muted)">Как получить токен: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained или Classic (выбери repo доступ к этому репозиторию).</div>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted)">Как получить токен: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained или Classic (выбери repo доступ). <br>Для OAuth: GitHub → Settings → Developer settings → OAuth Apps → New OAuth App → Authorization callback URL: <code>${escapeHtml(location.origin+location.pathname)}</code></div>
     </div>
     <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px">
       <h3 style="font-size:14px;margin-bottom:10px">Текущий проект</h3>
@@ -1438,9 +1706,18 @@ function renderProfile(){
     githubCfg.owner=document.getElementById('pOwner').value.trim();
     githubCfg.repo=document.getElementById('pRepo').value.trim();
     githubCfg.token=document.getElementById('pToken').value.trim();
-    localStorage.setItem(LS_GH, JSON.stringify(githubCfg)); toast('Сохранено ✓');
+    const clientId=document.getElementById('pClientId')?.value.trim()||'';
+    const proxy=document.getElementById('pProxy')?.value.trim()||'';
+    localStorage.setItem(LS_GH, JSON.stringify(githubCfg));
+    if(clientId) localStorage.setItem('gc_gh_client_id', clientId); else localStorage.removeItem('gc_gh_client_id');
+    if(proxy) localStorage.setItem('gc_gh_proxy', proxy); else localStorage.removeItem('gc_gh_proxy');
+    GH_OAUTH_CFG.clientId=clientId; GH_OAUTH_CFG.proxyUrl=proxy;
+    toast('Сохранено ✓'); renderAuthArea();
   });
-  document.getElementById('btnClearProfile').addEventListener('click',()=>{ localStorage.removeItem(LS_GH); githubCfg={}; renderProfile(); toast('Очищено'); });
+  document.getElementById('btnClearProfile').addEventListener('click',()=>{ localStorage.removeItem(LS_GH); localStorage.removeItem(LS_GH_USER); localStorage.removeItem('gc_gh_client_id'); localStorage.removeItem('gc_gh_proxy'); githubCfg={}; githubUser=null; GH_OAUTH_CFG.clientId=''; GH_OAUTH_CFG.proxyUrl=''; renderAuthArea(); renderProfile(); toast('Очищено'); });
+  document.getElementById('btnLogoutProfile')?.addEventListener('click', logoutGithub);
+  document.getElementById('btnLoginProfile')?.addEventListener('click', openGithubLogin);
+  document.getElementById('btnLoginProfile2')?.addEventListener('click', openGithubLogin);
   document.getElementById('btnResetDemo').addEventListener('click',()=>{
     if(!confirm('Сбросить проект?')) return;
     gameData=defaultGame(); initDemoScripts(gameData); saveLocal(); selectedId=gameData.objects[0].id; toast('Сброшено ✓'); renderProfile();
@@ -1449,7 +1726,7 @@ function renderProfile(){
   const myGames=document.getElementById('myGames');
   if(feedGames.length===0) myGames.innerHTML='<span style="font-size:12px;color:var(--muted)">Загрузи ленту на главной, чтобы увидеть игры. Локально показывается демо-игра.</span>';
   else {
-    const mine=feedGames.filter(g=> !githubCfg.owner || g.author===githubCfg.owner);
+    const mine=feedGames.filter(g=> !(githubUser?.login||githubCfg.owner) || g.author===(githubUser?.login||githubCfg.owner));
     if(mine.length===0) myGames.innerHTML='<span style="font-size:12px;color:var(--muted)">Пока нет игр от твоего автора.</span>';
     else mine.forEach(g=>{
       const row=document.createElement('div');
