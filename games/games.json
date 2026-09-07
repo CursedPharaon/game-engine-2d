@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "demo-game",
+    "title": "Демо: Поймай монетку",
+    "author": "CursedPharaon",
+    "description": "Кликай по герою и монетке, набирай очки! Демонстрация переменных, сохранения в localStorage и клонов.",
+    "createdAt": "2026-09-07T00:00:00.000Z",
+    "updatedAt": "2026-09-07T00:00:00.000Z",
+    "path": "games/demo-game/",
+    "cover": ""
+  }
+]

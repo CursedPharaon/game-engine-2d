@@ -1,0 +1,215 @@
+export function generateStandaloneHTML(gameData){
+  const json = JSON.stringify(gameData).replace(/</g,'\\u003c');
+  return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(gameData.meta.title)}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{margin:0;background:#0b0e14;color:#fff;font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;min-height:100vh}
+#stageWrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px}
+#stage{position:relative;overflow:hidden;border:2px solid #2b3244;box-shadow:0 10px 40px rgba(0,0,0,.6);background:${gameData.meta.bgColor||'#0b1020'}}
+.obj{position:absolute;display:flex;align-items:center;justify-content:center;transform-origin:center center;user-select:none}
+.hud{font-size:12px;color:#8a90a3;background:#171a20;border:1px solid #2a303f;padding:6px 10px;border-radius:99px}
+</style>
+</head>
+<body>
+<div id="stageWrap">
+  <div class="hud" id="hud">${escapeHtml(gameData.meta.title)} — кликни по объектам для взаимодействия</div>
+  <div id="stage"></div>
+</div>
+<script>
+const GAME_DATA = ${json};
+${runtimeJS()}
+<\/script>
+</body>
+</html>`;
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])) }
+
+function runtimeJS(){
+  return `
+(function(){
+  const data = GAME_DATA;
+  const stage = document.getElementById('stage');
+  const W = data.meta.width||480, H = data.meta.height||360;
+  stage.style.width=W+'px'; stage.style.height=H+'px';
+  stage.style.background=data.meta.bgColor||'#0b1020';
+  const spritesById={}; (data.assets.sprites||[]).forEach(s=> spritesById[s.id]=s.dataUrl);
+  const soundsById={}; (data.assets.sounds||[]).forEach(s=> soundsById[s.id]=s.dataUrl);
+  const vars={}; (data.variables||[]).forEach(v=> vars[v.name]=v.value);
+  const lists={}; (data.lists||[]).forEach(l=> lists[l.name]=[...l.items]);
+  // try load persisted vars from localStorage (those previously saved via block)
+  try{ Object.keys(vars).forEach(k=>{ const v=localStorage.getItem('gv_'+k); if(v!==null){ try{vars[k]=JSON.parse(v)}catch{vars[k]=v} } }) }catch{}
+  const objectsById={};
+  const clones=[];
+  let audioCtx=null;
+  function ensureAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }
+
+  function createDomForObj(obj, isClone=false){
+    const el=document.createElement('div');
+    el.className='obj';
+    el.dataset.objId=obj.id;
+    applyObjStyle(el,obj);
+    stage.appendChild(el);
+    // click handler for objects that have event_click blocks
+    el.addEventListener('click',()=> runScriptsForEvent(obj.id,'event_click'));
+    el.addEventListener('touchstart',(e)=>{ e.preventDefault(); runScriptsForEvent(obj.id,'event_click')},{passive:false});
+    return el;
+  }
+  function applyObjStyle(el,obj){
+    el.style.left=obj.x+'px'; el.style.top=obj.y+'px';
+    el.style.width=obj.width+'px'; el.style.height=obj.height+'px';
+    el.style.opacity= obj.visible===false? '0' : (obj.opacity??1);
+    el.style.display= obj.visible===false? 'none':'flex';
+    el.style.transform='rotate('+(obj.rotation||0)+'deg)';
+    el.style.zIndex=obj.zIndex||0;
+    el.style.flexDirection='column';
+    el.innerHTML='';
+    if(obj.type==='rect'){
+      el.style.background=obj.color||'#4f7cff';
+      el.style.border='1px solid rgba(255,255,255,.08)';
+      el.style.borderRadius='4px';
+      if(obj.text) el.innerHTML='<span style="font-size:'+(obj.fontSize||14)+'px;color:white;text-align:center;padding:2px">'+escapeHtml(obj.text)+'</span>';
+    } else if(obj.type==='circle'){
+      el.style.background=obj.color||'#ff6b6b';
+      el.style.borderRadius='50%';
+      if(obj.text) el.innerHTML='<span style="font-size:'+(obj.fontSize||14)+'px;color:white">'+escapeHtml(obj.text)+'</span>';
+    } else if(obj.type==='sprite'){
+      const src = obj.spriteId ? spritesById[obj.spriteId] : null;
+      if(src){ el.style.backgroundImage='url('+src+')'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; }
+      else { el.style.background='#2a303f'; el.innerHTML='<span style="font-size:10px;color:#8a90a3">no sprite</span>'; }
+    } else if(obj.type==='text'){
+      el.style.background='transparent';
+      el.style.color=obj.color||'#ffffff';
+      el.style.fontSize=(obj.fontSize||18)+'px';
+      el.style.fontWeight='700';
+      el.textContent=obj.text||'Текст';
+      el.style.whiteSpace='pre-wrap';
+    } else if(obj.type==='button'){
+      el.style.background=obj.color||'#4f7cff';
+      el.style.borderRadius='8px';
+      el.style.color='white';
+      el.style.fontWeight='700';
+      el.style.fontSize=(obj.fontSize||14)+'px';
+      el.style.cursor='pointer';
+      el.style.boxShadow='0 4px 0 rgba(0,0,0,.25)';
+      el.textContent=obj.text||'Кнопка';
+    }
+  }
+  function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+  // init objects
+  data.objects.forEach(o=>{ const el=createDomForObj(o); objectsById[o.id]={def:o, el, data:{...o}}; });
+
+  function getObjState(id){
+    // find original or clone
+    if(objectsById[id]) return objectsById[id];
+    const c=clones.find(c=>c.id===id); return c? {data:c, el:c.el} : null;
+  }
+  function updateDom(id){
+    const st = getObjState(id) || objectsById[id];
+    if(!st) return;
+    applyObjStyle(st.el, st.data);
+  }
+
+  // block executor
+  async function execBlock(block, ctxObjId){
+    const ctx = getObjState(ctxObjId);
+    if(!ctx) return;
+    const d=ctx.data;
+    const p=block.params||{};
+    switch(block.op){
+      case 'motion_goto': d.x=Number(p.x)||0; d.y=Number(p.y)||0; break;
+      case 'motion_changeX': d.x+=Number(p.dx)||0; break;
+      case 'motion_changeY': d.y+=Number(p.dy)||0; break;
+      case 'motion_rotate': d.rotation=(d.rotation||0)+ (Number(p.deg)||0); break;
+      case 'motion_setPos': d.x=Number(p.x)||0; d.y=Number(p.y)||0; break;
+      case 'looks_setSprite': d.spriteId=p.spriteId||null; d.type='sprite'; break;
+      case 'looks_changeSize': { const f=Number(p.factor)||1; d.width=Math.max(5,Math.round(d.width*f)); d.height=Math.max(5,Math.round(d.height*f)); break; }
+      case 'looks_setSize': d.width=Number(p.w)||d.width; d.height=Number(p.h)||d.height; break;
+      case 'looks_show': d.visible=true; break;
+      case 'looks_hide': d.visible=false; break;
+      case 'looks_setOpacity': d.opacity=Math.max(0,Math.min(1,Number(p.o)||1)); break;
+      case 'sound_play': {
+        const src=soundsById[p.soundId];
+        if(src){ try{ ensureAudio(); const a=new Audio(src); a.volume=0.9; await a.play().catch(()=>{});}catch{} }
+        break;
+      }
+      case 'control_clone': {
+        const cloneId='cl_'+Math.random().toString(36).slice(2,7);
+        const cloneData={...d, id:cloneId, _isClone:true, _origin:ctxObjId};
+        const el=createDomForObj(cloneData,true);
+        clones.push(Object.assign(cloneData,{el}));
+        // auto run scripts for clones? optionally trigger event_clone, but we treat as new object with same scripts
+        break;
+      }
+      case 'control_deleteClone': {
+        const idx=clones.findIndex(c=>c.id===ctxObjId);
+        if(idx>=0){ clones[idx].el.remove(); clones.splice(idx,1); }
+        break;
+      }
+      case 'control_wait': { await new Promise(r=> setTimeout(r, Number(p.ms)||0)); break; }
+      case 'var_set': vars[p.varName]= isNaN(Number(p.value))? p.value : Number(p.value); syncVar(p.varName); break;
+      case 'var_change': vars[p.varName]=(Number(vars[p.varName])||0)+ (Number(p.delta)||0); syncVar(p.varName); break;
+      case 'var_save': try{ localStorage.setItem('gv_'+p.varName, JSON.stringify(vars[p.varName])); }catch{} break;
+      case 'var_load': try{ const v=localStorage.getItem('gv_'+p.varName); if(v!==null) vars[p.varName]=JSON.parse(v); syncVar(p.varName);}catch{} break;
+      case 'list_add': { if(!lists[p.listName]) lists[p.listName]=[]; lists[p.listName].push(p.value); break; }
+      case 'list_remove': { if(lists[p.listName]) lists[p.listName].splice(Number(p.index)||0,1); break; }
+      case 'list_getRandom': { const arr=lists[p.listName]||[]; if(arr.length){ const v=arr[Math.floor(Math.random()*arr.length)]; if(p.varName) { vars[p.varName]=v; syncVar(p.varName);} } break; }
+      case 'list_clear': { lists[p.listName]=[]; break; }
+    }
+    updateDom(ctxObjId);
+  }
+  function syncVar(name){
+    // if there are text objects bound to var, update? Simple: if text object name equals var name, update its text
+    Object.values(objectsById).forEach(o=>{
+      if(o.def.type==='text' && o.def.text && o.def.text.includes('{'+name+'}')){
+        // replace placeholder
+        let t=o.def.text; Object.keys(vars).forEach(k=> t=t.replaceAll('{'+k+'}', String(vars[k])) );
+        o.data.text=t; updateDom(o.data.id);
+      }
+    });
+    // also clones
+    clones.forEach(c=>{ if(c._boundVar===name) {c.text=String(vars[name]); updateDom(c.id)} });
+  }
+
+  async function runScriptsForEvent(objId, eventType, extra){
+    const scripts = (data.scripts && data.scripts[objId]) || [];
+    // scripts is array of blocks; group by leading event block? We store flat list where first block is event.
+    // In editor we ensure sequence: [event_*, ...actions]. When event triggers, run following actions until next event.
+    let i=0;
+    while(i<scripts.length){
+      const b=scripts[i];
+      if(b.op===eventType || (eventType==='event_frame' && b.op==='event_frame') || (b.op==='event_key' && eventType==='event_key' && b.params.key===extra)){
+        // run following non-event blocks until next event
+        let j=i+1;
+        while(j<scripts.length && !scripts[j].op.startsWith('event_')){ await execBlock(scripts[j], objId); j++; }
+      }
+      i++;
+    }
+  }
+
+  // global key listener
+  window.addEventListener('keydown', (e)=>{
+    const key=e.key.toLowerCase();
+    data.objects.forEach(o=> runScriptsForEvent(o.id,'event_key',key));
+    clones.forEach(c=> runScriptsForEvent(c.id,'event_key',key));
+  });
+
+  // frame loop
+  function tick(){
+    data.objects.forEach(o=> runScriptsForEvent(o.id,'event_frame'));
+    clones.forEach(c=> runScriptsForEvent(c.id,'event_frame'));
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // expose for debugging
+  window.__GAME_VARS=vars; window.__GAME_LISTS=lists;
+})();
+`;
+}
