@@ -26,6 +26,8 @@ jobs:
           cp -r public/games dist/games 2>/dev/null || true
           # SPA fallback for GitHub Pages
           cp dist/index.html dist/404.html
+          # disable Jekyll processing
+          touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
